@@ -1,0 +1,188 @@
+name: .NET 10 CI/CD
+
+on:
+  pull_request:
+    branches: ["main", "homolog", "*"]
+  workflow_dispatch:
+
+jobs:
+  # -----------------------------
+  # INSTALL (restore)
+  # -----------------------------
+  restore:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./jwt-auth-api.Api/src/jwt-auth-api.Api
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+  # -----------------------------
+  # QUALITY GATE – CommitLint
+  # -----------------------------
+  commitlint:
+    runs-on: ubuntu-latest
+    needs: restore
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate Conventional Commits
+        run: |
+          echo "Checking commit messages..."
+          PATTERN='^(feat|fix|chore|docs|style|refactor|perf|test|build)(\(.+\))?: .+'
+          COMMITS=$(git log --format="%s" origin/main..HEAD)
+          if [ -z "$COMMITS" ]; then
+            echo "No commits found."; exit 0;
+          fi
+          failed=0
+          while IFS= read -r msg; do
+            [ -z "$msg" ] && continue
+            if echo "$msg" | grep -Eq "^Merge"; then
+            echo "Skipping merge commit: $msg"
+            continue
+          fi
+          if echo "$msg" | grep -Eq "$PATTERN"; then
+            echo "OK  $msg"
+          else
+            echo "ERR $msg"
+            failed=1
+          fi
+          done <<< "$COMMITS"
+          if [ "$failed" -ne 0 ]; then
+            echo "Commit messages did not follow Conventional Commits."
+            exit 1
+          fi
+          echo "Commit messages OK."
+
+  # -----------------------------
+  # Dotnet Format
+  # -----------------------------
+  format:
+    runs-on: ubuntu-latest
+    needs: restore
+    defaults:
+      run:
+        working-directory: ./jwt-auth-api.Api/src/jwt-auth-api.Api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Apply formatting
+        run: dotnet format ./jwt-auth-api.Api.csproj
+
+  # -----------------------------
+  # BUILD (warnings → errors)
+  # -----------------------------
+  build:
+    runs-on: ubuntu-latest
+    needs: [restore, format]
+    defaults:
+      run:
+        working-directory: ./jwt-auth-api.Api/src/jwt-auth-api.Api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build with warnings as errors
+        run: dotnet build -warnaserror
+
+  # -----------------------------
+  # TESTS
+  # -----------------------------
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: ./jwt-auth-api.Api/src/jwt-auth-api.Api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Run Tests
+        run: dotnet test --no-build --verbosity normal
+
+  # -----------------------------
+  # PUBLISH (like GitLab publish step)
+  # -----------------------------
+  publish:
+    runs-on: ubuntu-latest
+    needs: test
+    defaults:
+      run:
+        working-directory: ./jwt-auth-api.Api/src/jwt-auth-api.Api
+    outputs:
+      publish_path: ${{ steps.output_step.outputs.path }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Publish API
+        run: dotnet publish -c Release -o ./publish
+
+      - id: output_step
+        run: echo "path=./jwt-auth-api.Api/src/jwt-auth-api.Api/publish" >> $GITHUB_OUTPUT
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jwt-auth-api-publish
+          path: ./jwt-auth-api.Api/src/jwt-auth-api.Api/publish
+
+  # -----------------------------
+  # (OPTIONAL) AUTO MERGE MAIN → FEATURE
+  # -----------------------------
+  merge-main:
+    if: github.event.pull_request.head.ref != 'main'
+    runs-on: ubuntu-latest
+    needs: publish
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Merge main into branch
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+
+          git checkout ${{ github.event.pull_request.head.ref }}
+          git merge origin/main --no-edit || true
+          git push || true
+
+  # -----------------------------
+  # (OPTIONAL) DEPLOY STAGING
+  # -----------------------------
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: publish
+    environment: staging
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Deploy Placeholder
+        run: |
+          echo "Deploy to staging would happen here."
