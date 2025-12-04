@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="../jwt-auth-api.Application/jwt-auth-api.Application.csproj" />
+  <Project Path="../jwt-auth-api.Core/jwt-auth-api.Domain.csproj" />
+  <Project Path="../jwt-auth-api.Infrastructure/jwt-auth-api.Infrastructure.csproj" />
+  <Project Path="../jwt-auth-api.Shared/jwt-auth-api.Shared.csproj" />
+  <Project Path="jwt-auth-api.Api.csproj" />
+</Solution>
