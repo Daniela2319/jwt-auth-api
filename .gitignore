@@ -416,3 +416,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# BuildHost temporários
+BuildHost-netcore/
+BuildHost-net472/

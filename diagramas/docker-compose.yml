@@ -1,0 +1,23 @@
+services:
+  DFV_db:
+    image: postgres:17
+    container_name: DFV_database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: DFV_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d/
+      - DFV_db-data:/var/lib/postgresql/data
+    networks:
+      - DFV-network
+    restart: always
+
+volumes:
+  DFV_db-data:
+
+networks:
+  DFV-network:
+    external: true
