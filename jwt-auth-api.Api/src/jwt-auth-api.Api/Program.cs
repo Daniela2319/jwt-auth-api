@@ -1,6 +1,9 @@
 using jwt_auth_api.Api.Extensions;
 using jwt_auth_api.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 
 //===== Database =====
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -23,19 +25,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //===== Extensions =====
 builder.Services.AddAppDependencies();
+builder.Services.AddAuthenticationConfiguration(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.MapScalarApiReference();
     app.MapOpenApi();
-
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -6,7 +6,7 @@ namespace jwt_auth_api.Core
 {
     public class BaseModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public override string ToString()
