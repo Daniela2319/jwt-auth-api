@@ -1,4 +1,4 @@
-﻿namespace jwt_auth_api.Core
+﻿namespace jwt_auth_api.Core.Users
 {
     public class Person : BaseModel
     {

@@ -1,13 +1,12 @@
-﻿
-namespace jwt_auth_api.Infrastructure.Repositories.Interfaces
+﻿namespace jwt_auth_api.Infrastructure.Repositories.Interfaces
 {
     public interface IRepositoriy<T>
     {
-        Guid Create(T entity);
         List<T> Read();
-        T ReadById(Guid id);
+        T ReadById(int id);
+        int Create(T entity);
         void Update(T entity);
-        void Delete(Guid id);
-        bool Exists(Guid id);
+        void Delete(int id);
+        bool Exists(int id);
     }
 }

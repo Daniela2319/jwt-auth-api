@@ -1,54 +1,92 @@
-﻿using jwt_auth_api.Application.Service;
-using jwt_auth_api.Core;
+﻿using jwt_auth_api.Api.ViewModel;
+using jwt_auth_api.Api.ViewModel.PersonViewModel;
+using jwt_auth_api.Application.Service;
+using jwt_auth_api.Core.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace jwt_auth_api.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PersonController : ControllerBase
     {
-        private readonly ServicePerson  _servicePerson;
-        public PersonController(ServicePerson servicePerson)
+        private readonly PersonService  _servicePerson;
+        public PersonController(PersonService servicePerson)
         {
             _servicePerson = servicePerson;
         }
         [HttpGet]
-        public List<Person> Get()
+        public IActionResult Get()
         {
-            return _servicePerson.Read();
+            List<Person> person = _servicePerson.Read();
+            List<PersonViewModel> listViewModel = new List<PersonViewModel>();
+            foreach (var p in person)
+            {
+                listViewModel.Add(new PersonViewModel
+                {
+                    Id = p.Id,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName
+                }); 
+            }
+            return Ok(listViewModel);
         }
 
-        
         [HttpGet("{id}")]
-        public Person Get(Guid id)
+        public ActionResult<PersonViewModel> Get(int id)
         {
-            return _servicePerson.ReadById(id);
+            Person person = _servicePerson.ReadById(id);
+            if (person == null)
+                return NotFound();
+
+            var personViewModel = new PersonViewModel
+            {
+                Id = person.Id,
+                FirstName = person.FirstName,
+                LastName = person.LastName
+            };
+
+            return personViewModel;
         }
+
 
         [HttpGet("exist/{id}")]
-        public bool Exist(Guid id)
+        public IActionResult Exist(int id)
         {
-            return _servicePerson.Exists(id);
+            var response = _servicePerson.Exists(id);
+            return Ok(response);
         }
 
         [HttpPost]
-        public void Post([FromBody] Person model)
+        public IActionResult Post([FromBody] PersonViewModel viewModel)
         {
+            Person model = new Person
+            {
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName   
+            };
             _servicePerson.Create(model);
+            return CreatedAtAction(nameof(Get), new { id = model.Id }, model);
         }
-
-        
+    
         [HttpPut("{id}")]
-        public void Put(Guid id, [FromBody] Person model)
+        public IActionResult Put(int id, [FromBody] PersonViewModel viewModel)
         {
+            Person model = new Person
+            {
+                Id = id,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName
+            };
+
             _servicePerson.Update(model);
+            return Ok(model);  
         }
 
         [HttpDelete("{id}")]
-        public StatusCodeResult Delete(Guid id)
+        public StatusCodeResult Delete(int id)
         {
             try
             {
