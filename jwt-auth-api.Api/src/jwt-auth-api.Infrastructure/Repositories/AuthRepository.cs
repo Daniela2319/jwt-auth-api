@@ -1,9 +1,5 @@
-﻿using jwt_auth_api.Core.Users;
+﻿using jwt_auth_api.Domain.Users;
 using jwt_auth_api.Infrastructure.Context;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace jwt_auth_api.Infrastructure.Repositories
 {
@@ -15,7 +11,7 @@ namespace jwt_auth_api.Infrastructure.Repositories
         {
             _context = context;
         }
-        public Usuario? GetUserByEmail(string email)
+        public Usuario GetUserByEmail(string email)
         {
             var user = _context.Usuarios.FirstOrDefault(u => u.Email == email);
             return user;

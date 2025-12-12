@@ -1,4 +1,4 @@
-﻿using jwt_auth_api.Core;
+﻿using jwt_auth_api.Domain;
 using jwt_auth_api.Infrastructure.Context;
 using jwt_auth_api.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;

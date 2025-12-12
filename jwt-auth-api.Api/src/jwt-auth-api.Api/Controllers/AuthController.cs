@@ -1,6 +1,6 @@
-﻿using jwt_auth_api.Api.ViewModel.Login;
+﻿using jwt_auth_api.Api.ViewModel.LoginViewModel;
+using jwt_auth_api.Api.ViewModel.LoginViwModel;
 using jwt_auth_api.Application.Service;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace jwt_auth_api.Api.Controllers
