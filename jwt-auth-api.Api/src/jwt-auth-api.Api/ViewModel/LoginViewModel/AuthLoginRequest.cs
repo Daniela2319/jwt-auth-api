@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace jwt_auth_api.Api.ViewModel.Login
+namespace jwt_auth_api.Api.ViewModel.LoginViwModel
 {
     public class AuthLoginRequest
     {

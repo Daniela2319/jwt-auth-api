@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace jwt_auth_api.Core.Users
+﻿namespace jwt_auth_api.Domain.Users
 {
     public class Usuario : BaseModel
     {
@@ -10,5 +6,6 @@ namespace jwt_auth_api.Core.Users
         public string Password { get; set; } = string.Empty;
         public bool IsActive { get; set; } 
         public int PersonId { get; set; }
+       
     }
 }

@@ -1,5 +1,5 @@
 ﻿using jwt_auth_api.Application.Auth.Config;
-using jwt_auth_api.Core.Users;
+using jwt_auth_api.Domain.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,12 +15,14 @@ namespace jwt_auth_api.Application.Auth.Tools
         {
             this._tokenConfiguration = tokenConfiguration.Value;
         }
-        public string GenerateToken(Usuario model)
+        public string GenerateToken(Usuario model, Person person)
         {
             // ===== Claims do Token =====
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, model.Email),
+                new Claim("FirstName", person.FirstName),
+                new Claim("LastName", person.LastName),
+                new Claim("Email", model.Email),
                 new Claim("UsuarioId", model.Id.ToString()),
                 new Claim("PersonId", model.PersonId.ToString()),
                 new Claim(ClaimTypes.Role, "Admin")
