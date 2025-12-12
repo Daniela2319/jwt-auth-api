@@ -1,6 +1,8 @@
 <Solution>
-  <Project Path="D:/Edu.Dani/Agendamento-Whatsapp/jwt-auth-api/jwt-auth-api.Api/src/jwt-auth-api.Api/jwt-auth-api.Api.csproj" />
-  <Project Path="D:/Edu.Dani/Agendamento-Whatsapp/jwt-auth-api/jwt-auth-api.Api/src/jwt-auth-api.Application/jwt-auth-api.Application.csproj" />
-  <Project Path="D:/Edu.Dani/Agendamento-Whatsapp/jwt-auth-api/jwt-auth-api.Api/src/jwt-auth-api.Domain/jwt-auth-api.Domain.csproj" />
-  <Project Path="D:/Edu.Dani/Agendamento-Whatsapp/jwt-auth-api/jwt-auth-api.Api/src/jwt-auth-api.Infrastructure/jwt-auth-api.Infrastructure.csproj" />
+  <Project Path="../jwt-auth-api.Api/jwt-auth-api.Api.csproj" />
+  <Project Path="../jwt-auth-api.Application/jwt-auth-api.Application.csproj" />
+  <Project Path="../jwt-auth-api.Domain/jwt-auth-api.Domain.csproj" />
+  <Project Path="../jwt-auth-api.Infrastructure/jwt-auth-api.Infrastructure.csproj" />
 </Solution>
+
+

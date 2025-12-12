@@ -11,7 +11,7 @@ namespace jwt_auth_api.Infrastructure.Repositories
         {
             _context = context;
         }
-        public Usuario GetUserByEmail(string email)
+        public Usuario? GetUserByEmail(string email)
         {
             var user = _context.Usuarios.FirstOrDefault(u => u.Email == email);
             return user;
