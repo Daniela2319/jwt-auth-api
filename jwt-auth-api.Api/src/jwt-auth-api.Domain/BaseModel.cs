@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace jwt_auth_api.Core
+﻿namespace jwt_auth_api.Domain
 {
     public class BaseModel
     {

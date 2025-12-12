@@ -1,4 +1,4 @@
-﻿namespace jwt_auth_api.Api.ViewModel.Login
+﻿namespace jwt_auth_api.Api.ViewModel.LoginViewModel
 {
     public class AuthLoginResponse
     {

@@ -20,9 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\jwt-auth-api.Application\jwt-auth-api.Application.csproj" />
-    <ProjectReference Include="..\jwt-auth-api.Core\jwt-auth-api.Domain.csproj" />
+    <ProjectReference Include="..\jwt-auth-api.Domain\jwt-auth-api.Domain.csproj" />
     <ProjectReference Include="..\jwt-auth-api.Infrastructure\jwt-auth-api.Infrastructure.csproj" />
-    <ProjectReference Include="..\jwt-auth-api.Shared\jwt-auth-api.Shared.csproj" />
   </ItemGroup>
 
 </Project>

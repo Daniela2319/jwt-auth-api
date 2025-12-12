@@ -1,4 +1,4 @@
-﻿using jwt_auth_api.Core.Users;
+﻿using jwt_auth_api.Domain.Users;
 using jwt_auth_api.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
